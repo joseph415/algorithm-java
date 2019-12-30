@@ -1,62 +1,44 @@
-import java.util.ArrayList;
-import java.util.List;
-
-class P {
-    public int idx;
-    public int pro;
-
-    public P(int idx, int pro) {
-        this.idx = idx;
-        this.pro = pro;
-    }
-}
+import java.util.*;
 
 class Solution {
     public int solution(int[] priorities, int location) {
         int answer = 0;
-        int temp_pro;
-        int temp_idx;
-        boolean check = false;
-        List<P> l = new ArrayList<>();
 
-        for (int i = 0; i < priorities.length; i++) {
-            l.add(new P(i, priorities[i]));
+        Queue<Integer> que = new LinkedList<>();
+
+        for (int pri : priorities) {
+            que.add(pri);
         }
 
-        for (int k = 0; k < l.size(); k++) {
-            if (check) {
-                k = 0;
-            }
-            check = false;
-            for (int j = k + 1; j < l.size(); j++) {
-                if (l.get(k).pro < l.get(j).pro) {
-                    temp_pro = l.get(k).pro;
-                    temp_idx = l.get(k).idx;
-                    l.remove(k);
-                    l.add(new P(temp_idx, temp_pro));
-                    check = true;
+        Arrays.sort(priorities); //우선순위를 비교하기 위해 오름 차순 정렬
+        int length = priorities.length - 1; //오름차순 한 마지막 요소가 가장 큰 수
+
+        while (!que.isEmpty()) {
+            int current = que.poll();
+
+            //우선순위가 가장 높은 수 == 현재 큐에 담긴 (프린트 순서)가 같으면
+            if (current == priorities[length - answer]) {
+                answer++;
+                location--;
+                if (location < 0) {
+                    break;
+                }
+            } else {
+                //처음에 que.poll을 했던 수를 add 함으로써 맨 뒤로 밀림
+                que.add(current);
+                location--; // 1
+                if (location < 0) {
+                    location = que.size() - 1;
                 }
             }
         }
-
-        for (P p : l) {
-            System.out.println(p.idx + " " + p.pro);
-        }
-
-        for (P p : l) {
-            if(p.idx != location){
-                answer++;
-                continue;
-            }
-            break;
-        }
-        return answer+1;
+        return answer;
     }
 }
 
 public class Printer {
     public static void main(String[] args) {
-        int[] p = {3,3,4,2};
+        int[] p = {2, 9, 1, 1};
         int s = 3;
         System.out.println(new Solution().solution(p, s));
     }
