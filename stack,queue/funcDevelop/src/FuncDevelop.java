@@ -9,6 +9,7 @@ class Solution {
                 day++;
             }
             dayOfend[day]++;
+            System.out.println(Arrays.toString(dayOfend));
         }
         return Arrays.stream(dayOfend).filter(i -> i != 0).toArray();
     }
